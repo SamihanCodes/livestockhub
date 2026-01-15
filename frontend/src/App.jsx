@@ -7,11 +7,14 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import CreateListing from "./pages/CreateListing";
 import MyListings from "./pages/MyListings";
 import Listings from "./pages/Listings";
-
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <Router>
+      
+      <Navbar />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -25,26 +28,26 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route path="/listings" element={<Listings />} />
 
-<Route
-  path="/listings/create"
-  element={
-    <ProtectedRoute>
-      <CreateListing />
-    </ProtectedRoute>
-  }
-/>
+        <Route
+          path="/listings/create"
+          element={
+            <ProtectedRoute>
+              <CreateListing />
+            </ProtectedRoute>
+          }
+        />
 
-<Route
-  path="/listings/my"
-  element={
-    <ProtectedRoute>
-      <MyListings />
-    </ProtectedRoute>
-  }
-/>
-
+        <Route
+          path="/listings/my"
+          element={
+            <ProtectedRoute>
+              <MyListings />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

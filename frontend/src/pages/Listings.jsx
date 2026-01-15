@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllListings } from "../api/listings";
+import { expressInterest } from "../api/interests";
 
 const Listings = () => {
   const [listings, setListings] = useState([]);
@@ -12,12 +13,17 @@ const Listings = () => {
     <div>
       <h2>Available Listings</h2>
 
-      {listings.map((l) => (
-        <div key={l.id}>
-          <p>{l.animal_type} - ₹{l.price}</p>
-          <p>{l.description}</p>
-        </div>
-      ))}
+    {listings.map((l) => (
+  <div key={l.id}>
+    <p>{l.animal_type} - ₹{l.price}</p>
+    <p>{l.description}</p>
+
+    <button onClick={() => expressInterest(l.id)}>
+      I’m Interested
+    </button>
+  </div>
+))}
+
     </div>
   );
 };
