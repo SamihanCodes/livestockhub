@@ -8,11 +8,11 @@ import CreateListing from "./pages/CreateListing";
 import MyListings from "./pages/MyListings";
 import Listings from "./pages/Listings";
 import Navbar from "./components/Navbar";
-
+import MyInterests from "./pages/MyInterests"
 function App() {
   return (
     <Router>
-      
+
       <Navbar />
 
       <Routes>
@@ -45,6 +45,14 @@ function App() {
           element={
             <ProtectedRoute>
               <MyListings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/interests/my"
+          element={
+            <ProtectedRoute>
+              <MyInterests />
             </ProtectedRoute>
           }
         />

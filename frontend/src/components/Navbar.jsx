@@ -11,7 +11,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav style={{ padding: "10px", borderBottom: "1px solid #ccc" }}>
+    <nav className="navbar">
       <Link to="/">Home</Link>{" | "}
 
       {user && (
@@ -22,6 +22,7 @@ const Navbar = () => {
             <>
               <Link to="/listings/create">Create Listing</Link>{" | "}
               <Link to="/listings/my">My Listings</Link>{" | "}
+              <Link to="/interests/my">View Interests</Link>{" | "}
             </>
           )}
 

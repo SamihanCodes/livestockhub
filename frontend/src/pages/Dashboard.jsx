@@ -15,7 +15,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h2>Dashboard</h2>
 
       <p>

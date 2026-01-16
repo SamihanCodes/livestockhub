@@ -1,7 +1,9 @@
 import api from "./axios";
 
-export const expressInterest = (listingId) =>
-  api.post("/interests", { listingId });
+// Buyer
+export const createInterest = (listing_id) =>
+  api.post("/interests", { listing_id });
 
-export const getListingInterests = (listingId) =>
-  api.get(`/interests/${listingId}`);
+// Seller
+export const getMyInterests = () =>
+  api.get("/interests/my");

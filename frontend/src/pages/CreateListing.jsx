@@ -29,17 +29,51 @@ const CreateListing = () => {
   };
 
   return (
+    <div className="container">
+  <div className="card">
+    <h2>Create Listing</h2>
+
     <form onSubmit={handleSubmit}>
-      <h2>Create Listing</h2>
+      <input
+        name="animal_type"
+        placeholder="Animal Type"
+        onChange={handleChange}
+        required
+      />
 
-      <input name="animal_type" placeholder="Animal Type" onChange={handleChange} required />
-      <input name="breed" placeholder="Breed" onChange={handleChange} />
-      <input name="age" type="number" placeholder="Age" onChange={handleChange} />
-      <input name="price" type="number" placeholder="Price" onChange={handleChange} required />
-      <textarea name="description" placeholder="Description" onChange={handleChange} />
+      <input
+        name="breed"
+        placeholder="Breed"
+        onChange={handleChange}
+      />
 
-      <button type="submit">Create</button>
+      <input
+        name="age"
+        type="number"
+        placeholder="Age"
+        onChange={handleChange}
+      />
+
+      <input
+        name="price"
+        type="number"
+        placeholder="Price"
+        onChange={handleChange}
+        required
+      />
+
+      <textarea
+        name="description"
+        placeholder="Description"
+        onChange={handleChange}
+      />
+
+      <button type="submit">Create Listing</button>
     </form>
+  </div>
+</div>
+
+   
   );
 };
 
