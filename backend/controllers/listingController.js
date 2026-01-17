@@ -35,13 +35,15 @@ const createListing = async (req, res) => {
 // Get all active listings (Public)
 const getAllListings = async (req, res) => {
   try {
-    const listings = await listingModel.getAllListings();
+    const listings =
+      await listingModel.getAllListingsWithHighestBid();
     res.status(200).json(listings);
   } catch (error) {
     console.error("Get listings error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Get listings by logged-in seller
 const getMyListings = async (req, res) => {

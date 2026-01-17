@@ -71,6 +71,23 @@ const updateListingStatus = async (listing_id, seller_id, status) => {
 
   return result.rows[0];
 };
+const getAllListingsWithHighestBid = async () => {
+  const query = `
+    SELECT 
+      listings.*,
+      users.name AS seller_name,
+      COALESCE(MAX(bids.amount), 0) AS highest_bid
+    FROM listings
+    JOIN users ON listings.seller_id = users.id
+    LEFT JOIN bids ON listings.id = bids.listing_id
+    WHERE listings.status = 'active'
+    GROUP BY listings.id, users.name
+    ORDER BY listings.created_at DESC;
+  `;
+  const result = await pool.query(query);
+  return result.rows;
+};
+
 
 
 module.exports = {
@@ -78,5 +95,6 @@ module.exports = {
   getAllListings,
   getListingsBySeller,
   updateListingStatus,
+  getAllListingsWithHighestBid,
 };
 

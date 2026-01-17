@@ -8,6 +8,9 @@ import CreateListing from "./pages/CreateListing";
 import MyListings from "./pages/MyListings";
 import Listings from "./pages/Listings";
 import Navbar from "./components/Navbar";
+import Profile from "./pages/Profile";
+import MyBids from "./pages/MyBids";
+
 import MyInterests from "./pages/MyInterests"
 function App() {
   return (
@@ -56,6 +59,24 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bids/my"
+          element={
+            <ProtectedRoute>
+              <MyBids />
+            </ProtectedRoute>
+          }
+        />
+
+
       </Routes>
     </Router>
   );
