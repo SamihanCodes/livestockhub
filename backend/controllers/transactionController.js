@@ -38,7 +38,30 @@ const payTransaction = async (req, res) => {
   }
 };
 
+// View single transaction (invoice)
+const getTransaction = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const { id } = req.params;
+
+    const transaction =
+      await transactionModel.getTransactionById(id, user_id);
+
+    if (!transaction) {
+      return res.status(404).json({
+        message: "Transaction not found",
+      });
+    }
+
+    res.json(transaction);
+  } catch (error) {
+    console.error("Get transaction error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   getMyTransactions,
   payTransaction,
+  getTransaction,
 };

@@ -12,27 +12,46 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <Link to="/">Home</Link>{" | "}
+      <Link to="/">Home</Link>
 
       {user && (
         <>
-          <Link to="/dashboard">Dashboard</Link>{" | "}
+          {" | "}
+          <Link to="/dashboard">Dashboard</Link>
 
           {user.role === "seller" && (
             <>
-              <Link to="/listings/create">Create Listing</Link>{" | "}
-              <Link to="/listings/my">My Listings</Link>{" | "}
-              <Link to="/interests/my">View Interests</Link>{" | "}
+              {" | "}
+              <Link to="/listings/create">Create Listing</Link>
+              {" | "}
+              <Link to="/listings/my">My Listings</Link>
+              {" | "}
+              <Link to="/interests/my">View Interests</Link>
             </>
           )}
 
           {user.role === "buyer" && (
-            <Link to="/listings">Listings</Link>
-            
+            <>
+              {" | "}
+              <Link to="/listings">Listings</Link>
+            </>
           )}
-          {" | "}<Link to="/profile">Profile</Link>{" | "}
-          <Link to="/bids/my">View Bids</Link>{" | "}
-          <Link to="/transactions/my">My Transactions</Link>{" | "}
+
+          {" | "}
+          <Link to="/profile">Profile</Link>
+
+          {" | "}
+          <Link to="/bids/my">View Bids</Link>
+
+          {" | "}
+          <Link to="/transactions/my">My Transactions</Link>
+
+          {user.role === "admin" && (
+            <>
+              {" | "}
+              <Link to="/admin">Admin</Link>
+            </>
+          )}
 
           {" | "}
           <button onClick={handleLogout}>Logout</button>
@@ -41,7 +60,9 @@ const Navbar = () => {
 
       {!user && (
         <>
-          <Link to="/login">Login</Link>{" | "}
+          {" | "}
+          <Link to="/login">Login</Link>
+          {" | "}
           <Link to="/register">Register</Link>
         </>
       )}

@@ -11,7 +11,9 @@ const bidRoutes = require("./routes/bidRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
 
 const app = express();
+const adminRoutes = require("./routes/adminRoutes");
 
+app.use("/api/admin", adminRoutes);
 app.use(cors());
 app.use(express.json());
 app.use("/api/interests", interestRoutes);

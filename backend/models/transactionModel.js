@@ -42,9 +42,21 @@ const markAsPaid = async (transaction_id, buyer_id) => {
   ]);
   return result.rows[0];
 };
+const getTransactionById = async (id, user_id) => {
+  const query = `
+    SELECT *
+    FROM transactions
+    WHERE id = $1
+      AND (buyer_id = $2 OR seller_id = $2)
+  `;
+  const result = await pool.query(query, [id, user_id]);
+  return result.rows[0];
+};
+
 
 module.exports = {
   createTransaction,
   getMyTransactions,
   markAsPaid,
+  getTransactionById,
 };

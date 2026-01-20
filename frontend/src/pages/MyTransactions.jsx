@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMyTransactions, payTransaction } from "../api/transactions";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const MyTransactions = () => {
   const [transactions, setTransactions] = useState([]);
@@ -30,11 +31,13 @@ const MyTransactions = () => {
         <div key={t.id} className="card">
           <p><strong>Amount:</strong> ₹{t.amount}</p>
           <p><strong>Status:</strong> {t.status}</p>
+          <Link to={`/invoice/${t.id}`}>View Invoice</Link>
 
           {t.status === "pending" && user?.id === t.buyer_id && (
             <button onClick={() => handlePay(t.id)}>
               Pay Now
             </button>
+            
           )}
         </div>
       ))}

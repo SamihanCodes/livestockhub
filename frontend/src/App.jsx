@@ -11,8 +11,11 @@ import Navbar from "./components/Navbar";
 import Profile from "./pages/Profile";
 import MyBids from "./pages/MyBids";
 import MyTransactions from "./pages/MyTransactions";
-
+import Invoice from "./pages/Invoice";
 import MyInterests from "./pages/MyInterests"
+import AdminDashboard from "./pages/AdminDashboard";
+
+
 function App() {
   return (
     <Router>
@@ -84,6 +87,23 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/invoice/:id"
+          element={
+            <ProtectedRoute>
+              <Invoice />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
 
 
 
