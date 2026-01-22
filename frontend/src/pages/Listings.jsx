@@ -14,11 +14,9 @@ const Listings = () => {
   const handleInterest = async (listingId) => {
     try {
       await createInterest(listingId);
-      alert("Interest registered");
+      alert("Interest registered successfully");
     } catch (error) {
-      alert(
-        error.response?.data?.message || "Failed to register interest"
-      );
+      alert(error.response?.data?.message || "Failed to register interest");
     }
   };
 
@@ -53,45 +51,62 @@ const Listings = () => {
     }
   };
 
-
   return (
     <div className="container">
-      <h2>Available Listings</h2>
+      <h2 style={{ marginBottom: "20px" }}>Available Listings</h2>
 
-      {listings.length === 0 && <p>No listings available</p>}
+      {listings.length === 0 && (
+        <p style={{ color: "#475569" }}>No listings available</p>
+      )}
 
       {listings.map((l) => (
         <div className="card" key={l.id}>
-          <p>
-            <strong>{l.animal_type}</strong> – ₹{l.price}
+          <h3 style={{ color: "#142C52", marginBottom: "5px" }}>
+            {l.animal_type}
+          </h3>
+
+          <p style={{ marginBottom: "5px" }}>
+            <strong>Price:</strong> ₹{l.price}
           </p>
-          <p>{l.description}</p>
 
-          {/* Interest */}
-          <button onClick={() => handleInterest(l.id)}>
-            I’m Interested
-          </button>
+          <p style={{ color: "#475569" }}>{l.description}</p>
 
-          {/* Bidding */}
-          <div style={{ marginTop: "10px" }}>
+          {/* Highest bid */}
+          <p style={{ marginTop: "8px" }}>
+            <strong>Highest Bid:</strong>{" "}
+            {l.highest_bid > 0 ? (
+              <span style={{ color: "#22C55E" }}>
+                ₹{l.highest_bid}
+              </span>
+            ) : (
+              <span>No bids yet</span>
+            )}
+          </p>
+
+          {/* Actions */}
+          <div
+            style={{
+              marginTop: "12px",
+              display: "flex",
+              gap: "10px",
+              flexWrap: "wrap",
+            }}
+          >
+            <button onClick={() => handleInterest(l.id)}>
+              I’m Interested
+            </button>
+
             <input
               type="number"
-              placeholder="Enter your bid"
+              placeholder="Your bid"
               value={bidAmounts[l.id] || ""}
               onChange={(e) =>
                 handleBidChange(l.id, e.target.value)
               }
+              style={{ maxWidth: "140px" }}
             />
-            <p>
-              <strong>Highest Bid:</strong>{" "}
-              {l.highest_bid > 0 ? `₹${l.highest_bid}` : "No bids yet"}
-            </p>
 
-
-            <button
-              style={{ marginLeft: "8px" }}
-              onClick={() => handlePlaceBid(l.id)}
-            >
+            <button onClick={() => handlePlaceBid(l.id)}>
               Place Bid
             </button>
           </div>

@@ -13,6 +13,7 @@ const transactionRoutes = require("./routes/transactionRoutes");
 const app = express();
 const adminRoutes = require("./routes/adminRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const adminAnalyticsRoutes = require("./routes/adminAnalyticsRoutes");
 
 
 app.use("/api/notifications", notificationRoutes);
@@ -24,6 +25,8 @@ app.use("/api/bids", bidRoutes);
 app.use("/api/transactions", transactionRoutes)
 app.use('/api/auth', authRoutes);
 app.use("/api/listings", listingRoutes);
+app.use("/api/admin/analytics", adminAnalyticsRoutes);
+
 app.get('/', (req, res) => {
   res.send('LiveStockHub API is running');
 });

@@ -10,15 +10,36 @@ const MyInterests = () => {
 
   return (
     <div className="container">
-      <h2>Interested Buyers</h2>
+      <h2 style={{ marginBottom: "20px" }}>
+        Interested Buyers
+      </h2>
 
-      {interests.length === 0 && <p>No interests yet</p>}
+      <p style={{ color: "#475569", marginBottom: "20px" }}>
+        Buyers who have shown interest in your livestock listings.
+      </p>
+
+      {interests.length === 0 && (
+        <p style={{ color: "#64748b" }}>
+          No buyers have shown interest yet.
+        </p>
+      )}
 
       {interests.map((i, index) => (
         <div className="card" key={index}>
-          <p><strong>Buyer:</strong> {i.buyer_name} ({i.buyer_email})</p>
-          <p><strong>Animal:</strong> {i.animal_type}</p>
-          <p><strong>Price:</strong> ₹{i.price}</p>
+          <p style={{ marginBottom: "6px" }}>
+            <strong>Buyer Email:</strong>{" "}
+            <span style={{ color: "#1B9AAA" }}>
+              {i.buyer_email}
+            </span>
+          </p>
+
+          <p style={{ marginBottom: "6px" }}>
+            <strong>Animal:</strong> {i.animal_type}
+          </p>
+
+          <p>
+            <strong>Listed Price:</strong> ₹{i.price}
+          </p>
         </div>
       ))}
     </div>

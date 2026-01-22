@@ -16,7 +16,6 @@ const Navbar = () => {
   useEffect(() => {
     if (user) {
       getMyNotifications().then((res) => {
-       
         setHasNotification(res.data.length > 0);
       });
     } else {
@@ -27,27 +26,6 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <Link to="/">Home</Link>
-
-      {" | "}
-      <Link
-        to="/notifications"
-        style={{ position: "relative", display: "inline-block" }}
-      >
-        Notifications
-        {hasNotification && (
-          <span
-            style={{
-              position: "absolute",
-              top: "2px",
-              right: "-10px",
-              width: "8px",
-              height: "8px",
-              backgroundColor: "red",
-              borderRadius: "50%",
-            }}
-          />
-        )}
-      </Link>
 
       {user && (
         <>
@@ -87,6 +65,27 @@ const Navbar = () => {
               <Link to="/admin">Admin</Link>
             </>
           )}
+
+          {" | "}
+          <Link
+            to="/notifications"
+            style={{ position: "relative", display: "inline-block" }}
+          >
+            Notifications
+            {hasNotification && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "2px",
+                  right: "-10px",
+                  width: "8px",
+                  height: "8px",
+                  backgroundColor: "red",
+                  borderRadius: "50%",
+                }}
+              />
+            )}
+          </Link>
 
           {" | "}
           <button onClick={handleLogout}>Logout</button>

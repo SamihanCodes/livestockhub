@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,52 +9,75 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const res = await axios.post("/api/auth/login", {
-      email,
-      password,
-    });
+    try {
+      const res = await axios.post("/api/auth/login", {
+        email,
+        password,
+      });
 
-    console.log("LOGIN RESPONSE:", res.data);
+      if (!res.data.user || !res.data.token) {
+        throw new Error("Invalid login response");
+      }
 
-    if (!res.data.user || !res.data.token) {
-      throw new Error("Invalid login response");
+      login(res.data.user, res.data.token);
+      navigate("/dashboard");
+    } catch (err) {
+      alert("Invalid email or password");
+      console.error(err);
     }
-
-    login(res.data.user, res.data.token);
-    navigate("/dashboard");
-  } catch (err) {
-    alert("Login failed");
-    console.error(err);
-  }
-};
-
+  };
 
   return (
-    <form className="container" onSubmit={handleSubmit}>
-      <h2>Login</h2>
+    <div
+      style={{
+        minHeight: "80vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <form className="container" onSubmit={handleSubmit} style={{ maxWidth: "400px" }}>
+        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+          Login to LiveStockHub
+        </h2>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
+        <p style={{ textAlign: "center", color: "#475569", marginBottom: "20px" }}>
+          Access your dashboard and manage your activity
+        </p>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
+        <label>Email</label>
+        <input
+          type="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-      <button type="submit">Login</button>
-    </form>
+        <label>Password</label>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <button type="submit" style={{ width: "100%", marginTop: "10px" }}>
+          Login
+        </button>
+
+        <p style={{ textAlign: "center", marginTop: "15px", fontSize: "14px" }}>
+          Don’t have an account?{" "}
+          <Link to="/register" style={{ color: "#1B9AAA" }}>
+            Register here
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 };
 
