@@ -1,12 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
+
 const {
   createListing,
   getAllListings,
   getMyListings,
   updateListingStatus,
+  updateListing
 } = require("../controllers/listingController");
+
 
 const authenticate = require("../middleware/authMiddleware");
 const authorizeRole = require("../middleware/roleMiddleware");
@@ -37,5 +40,12 @@ router.patch(
   authorizeRole("seller"),
   updateListingStatus
 );
+router.put(
+  "/:id",
+  authenticate,
+  authorizeRole("seller"),
+  updateListing
+);
+
 
 module.exports = router;

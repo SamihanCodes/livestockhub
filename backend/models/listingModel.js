@@ -87,6 +87,42 @@ const getAllListingsWithHighestBid = async () => {
   const result = await pool.query(query);
   return result.rows;
 };
+const updateListing = async (
+  id,
+  seller_id,
+  animal_type,
+  breed,
+  age,
+  price,
+  description
+) => {
+  const query = `
+    UPDATE listings
+    SET
+      animal_type = $1,
+      breed = $2,
+      age = $3,
+      price = $4,
+      description = $5
+    WHERE id = $6 AND seller_id = $7
+    RETURNING *;
+  `;
+
+  const values = [
+    animal_type,
+    breed,
+    age,
+    price,
+    description,
+    id,
+    seller_id,
+  ];
+
+  const result = await pool.query(query, values);
+  return result.rows[0];
+};
+
+
 
 
 
@@ -95,6 +131,7 @@ module.exports = {
   getAllListings,
   getListingsBySeller,
   updateListingStatus,
-  getAllListingsWithHighestBid,
+  updateListing
 };
+
 

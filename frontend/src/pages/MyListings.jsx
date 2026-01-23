@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { getMyListings } from "../api/listings";
+import { useNavigate } from "react-router-dom";
 
 const MyListings = () => {
   const [listings, setListings] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getMyListings().then((res) => setListings(res.data));
@@ -10,7 +12,9 @@ const MyListings = () => {
 
   return (
     <div className="container">
-      <h2 style={{ marginBottom: "20px" }}>My Listings</h2>
+      <h2 style={{ marginBottom: "20px", color: "#142C52" }}>
+        My Listings
+      </h2>
 
       {listings.length === 0 && (
         <p style={{ color: "#475569" }}>
@@ -28,7 +32,7 @@ const MyListings = () => {
             <strong>Price:</strong> ₹{l.price}
           </p>
 
-          <p>
+          <p style={{ marginBottom: "10px" }}>
             <strong>Status:</strong>{" "}
             {l.status === "active" ? (
               <span style={{ color: "#22C55E" }}>Active</span>
@@ -36,6 +40,18 @@ const MyListings = () => {
               <span style={{ color: "#EF4444" }}>Sold</span>
             )}
           </p>
+
+          {l.status === "active" && (
+            <button
+              onClick={() => navigate(`/listings/edit/${l.id}`)}
+              style={{
+                backgroundColor: "#16808D",
+                padding: "6px 12px",
+              }}
+            >
+              Edit Listing
+            </button>
+          )}
         </div>
       ))}
     </div>

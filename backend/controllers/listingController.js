@@ -91,6 +91,38 @@ const updateListingStatus = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+const updateListing = async (req, res) => {
+  try {
+    const seller_id = req.user.id;
+    const { id } = req.params;
+    const { animal_type, breed, age, price, description } = req.body;
+
+    const updated = await listingModel.updateListing(
+      id,
+      seller_id,
+      animal_type,
+      breed,
+      age,
+      price,
+      description
+    );
+
+    if (!updated) {
+      return res.status(404).json({
+        message: "Listing not found or unauthorized",
+      });
+    }
+
+    res.json({
+      message: "Listing updated successfully",
+      listing: updated,
+    });
+  } catch (error) {
+    console.error("Update listing error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 
 module.exports = {
@@ -98,5 +130,7 @@ module.exports = {
   getAllListings,
   getMyListings,
   updateListingStatus,
+  updateListing
 };
+
 

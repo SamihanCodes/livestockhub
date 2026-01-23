@@ -15,6 +15,7 @@ import Invoice from "./pages/Invoice";
 import MyInterests from "./pages/MyInterests"
 import AdminDashboard from "./pages/AdminDashboard";
 import Notifications from "./pages/Notifications";
+import EditListing from "./pages/EditListing";
 
 
 function App() {
@@ -112,6 +113,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/listings/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditListing />
+            </ProtectedRoute>
+          }
+        />
+
 
 
       </Routes>
