@@ -29,14 +29,19 @@ const createListing = async (
   return result.rows[0];
 };
 
-// Get all listings
-const getAllListings = async () => {
+// Get all active listings with highest bid (FOR BUYERS)
+const getAllListingsWithHighestBid = async () => {
   const query = `
-    SELECT listings.*, users.name AS seller_name
+    SELECT 
+      listings.*,
+      users.name AS seller_name,
+      COALESCE(MAX(bids.amount), 0) AS highest_bid
     FROM listings
     JOIN users ON listings.seller_id = users.id
-    WHERE status = 'active'
-    ORDER BY created_at DESC;
+    LEFT JOIN bids ON listings.id = bids.listing_id
+    WHERE listings.status = 'active'
+    GROUP BY listings.id, users.name
+    ORDER BY listings.created_at DESC;
   `;
 
   const result = await pool.query(query);
@@ -54,6 +59,7 @@ const getListingsBySeller = async (seller_id) => {
   const result = await pool.query(query, [seller_id]);
   return result.rows;
 };
+
 // Update listing status (seller only)
 const updateListingStatus = async (listing_id, seller_id, status) => {
   const query = `
@@ -71,22 +77,8 @@ const updateListingStatus = async (listing_id, seller_id, status) => {
 
   return result.rows[0];
 };
-const getAllListingsWithHighestBid = async () => {
-  const query = `
-    SELECT 
-      listings.*,
-      users.name AS seller_name,
-      COALESCE(MAX(bids.amount), 0) AS highest_bid
-    FROM listings
-    JOIN users ON listings.seller_id = users.id
-    LEFT JOIN bids ON listings.id = bids.listing_id
-    WHERE listings.status = 'active'
-    GROUP BY listings.id, users.name
-    ORDER BY listings.created_at DESC;
-  `;
-  const result = await pool.query(query);
-  return result.rows;
-};
+
+// Update listing details (EDIT LISTING)
 const updateListing = async (
   id,
   seller_id,
@@ -121,17 +113,55 @@ const updateListing = async (
   const result = await pool.query(query, values);
   return result.rows[0];
 };
+// Advanced search & filter listings
+const searchListings = async (filters) => {
+  let query = `
+    SELECT 
+      listings.*,
+      COALESCE(MAX(bids.amount), 0) AS highest_bid
+    FROM listings
+    LEFT JOIN bids ON listings.id = bids.listing_id
+    WHERE listings.status = 'active'
+  `;
 
+  const values = [];
+  let idx = 1;
 
+  if (filters.animal_type) {
+    query += ` AND listings.animal_type ILIKE $${idx++}`;
+    values.push(`%${filters.animal_type}%`);
+  }
 
+  if (filters.breed) {
+    query += ` AND listings.breed ILIKE $${idx++}`;
+    values.push(`%${filters.breed}%`);
+  }
+
+  if (filters.minPrice) {
+    query += ` AND listings.price >= $${idx++}`;
+    values.push(filters.minPrice);
+  }
+
+  if (filters.maxPrice) {
+    query += ` AND listings.price <= $${idx++}`;
+    values.push(filters.maxPrice);
+  }
+
+  query += `
+    GROUP BY listings.id
+    ORDER BY listings.created_at DESC
+  `;
+
+  const result = await pool.query(query, values);
+  return result.rows;
+};
 
 
 module.exports = {
   createListing,
-  getAllListings,
+  getAllListingsWithHighestBid,
   getListingsBySeller,
   updateListingStatus,
-  updateListing
+  updateListing,
+  searchListings,
 };
-
-

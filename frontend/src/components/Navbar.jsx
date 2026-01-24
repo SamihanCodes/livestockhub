@@ -40,6 +40,8 @@ const Navbar = () => {
               <Link to="/listings/my">My Listings</Link>
               {" | "}
               <Link to="/interests/my">View Interests</Link>
+              {" | "}
+              <Link to="/bids/my">View Bids</Link>
             </>
           )}
 
@@ -52,9 +54,6 @@ const Navbar = () => {
 
           {" | "}
           <Link to="/profile">Profile</Link>
-
-          {" | "}
-          <Link to="/bids/my">View Bids</Link>
 
           {" | "}
           <Link to="/transactions/my">My Transactions</Link>
@@ -80,7 +79,7 @@ const Navbar = () => {
                   right: "-10px",
                   width: "8px",
                   height: "8px",
-                  backgroundColor: "red",
+                  backgroundColor: "#EF4444",
                   borderRadius: "50%",
                 }}
               />
@@ -88,7 +87,9 @@ const Navbar = () => {
           </Link>
 
           {" | "}
-          <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleLogout} className="logout-btn">
+            Logout
+          </button>
         </>
       )}
 

@@ -1,112 +1,121 @@
 import { useEffect, useState } from "react";
-import { getAllListings } from "../api/listings";
+import { searchListings } from "../api/listings";
 import { createInterest } from "../api/interests";
 import { placeBid } from "../api/bids";
 
 const Listings = () => {
   const [listings, setListings] = useState([]);
+  const [filters, setFilters] = useState({
+    animal_type: "",
+    minPrice: "",
+    maxPrice: "",
+  });
   const [bidAmounts, setBidAmounts] = useState({});
 
+  const fetchListings = () => {
+    searchListings(filters).then((res) => setListings(res.data));
+  };
+
   useEffect(() => {
-    getAllListings().then((res) => setListings(res.data));
+    fetchListings();
   }, []);
 
-  const handleInterest = async (listingId) => {
-    try {
-      await createInterest(listingId);
-      alert("Interest registered successfully");
-    } catch (error) {
-      alert(error.response?.data?.message || "Failed to register interest");
+  const handleFilterChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
+  const handleBidChange = (id, value) => {
+    setBidAmounts((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handlePlaceBid = async (id) => {
+    if (!bidAmounts[id] || Number(bidAmounts[id]) <= 0) {
+      alert("Enter a valid bid amount");
+      return;
     }
-  };
 
-  const handleBidChange = (listingId, value) => {
-    setBidAmounts((prev) => ({
-      ...prev,
-      [listingId]: value,
-    }));
-  };
-
-  const handlePlaceBid = async (listingId) => {
     try {
-      if (!bidAmounts[listingId]) {
-        alert("Please enter a bid amount");
-        return;
-      }
-
-      if (Number(bidAmounts[listingId]) <= 0) {
-        alert("Bid amount must be greater than zero");
-        return;
-      }
-
-      await placeBid(listingId, bidAmounts[listingId]);
+      await placeBid(id, bidAmounts[id]);
       alert("Bid placed successfully");
-
-      setBidAmounts((prev) => ({
-        ...prev,
-        [listingId]: "",
-      }));
-    } catch (error) {
-      alert(error.response?.data?.message || "Failed to place bid");
+      fetchListings();
+    } catch (err) {
+      alert(err.response?.data?.message || "Bid failed");
     }
   };
 
   return (
     <div className="container">
-      <h2 style={{ marginBottom: "20px" }}>Available Listings</h2>
+      <h2 style={{ color: "#142C52", marginBottom: "16px" }}>
+        Available Listings
+      </h2>
 
-      {listings.length === 0 && (
-        <p style={{ color: "#475569" }}>No listings available</p>
-      )}
+      {/* 🔍 FILTER BAR */}
+      <div className="card" style={{ marginBottom: "20px" }}>
+        <h3 style={{ marginBottom: "10px" }}>Search & Filter</h3>
+
+        <input
+          name="animal_type"
+          placeholder="Animal Type (e.g. Cow, Goat)"
+          value={filters.animal_type}
+          onChange={handleFilterChange}
+        />
+
+        <div style={{ display: "flex", gap: "10px" }}>
+          <input
+            type="number"
+            name="minPrice"
+            placeholder="Min Price"
+            value={filters.minPrice}
+            onChange={handleFilterChange}
+          />
+          <input
+            type="number"
+            name="maxPrice"
+            placeholder="Max Price"
+            value={filters.maxPrice}
+            onChange={handleFilterChange}
+          />
+        </div>
+
+        <button
+          style={{ marginTop: "10px", backgroundColor: "#16808D" }}
+          onClick={fetchListings}
+        >
+          Apply Filters
+        </button>
+      </div>
+
+      {/* 📦 LISTINGS */}
+      {listings.length === 0 && <p>No listings found</p>}
 
       {listings.map((l) => (
         <div className="card" key={l.id}>
-          <h3 style={{ color: "#142C52", marginBottom: "5px" }}>
-            {l.animal_type}
-          </h3>
+          <h3 style={{ color: "#1B9AAA" }}>{l.animal_type}</h3>
+          <p><strong>Price:</strong> ₹{l.price}</p>
+          <p>{l.description}</p>
 
-          <p style={{ marginBottom: "5px" }}>
-            <strong>Price:</strong> ₹{l.price}
-          </p>
-
-          <p style={{ color: "#475569" }}>{l.description}</p>
-
-          {/* Highest bid */}
-          <p style={{ marginTop: "8px" }}>
+          <p>
             <strong>Highest Bid:</strong>{" "}
-            {l.highest_bid > 0 ? (
-              <span style={{ color: "#22C55E" }}>
-                ₹{l.highest_bid}
-              </span>
-            ) : (
-              <span>No bids yet</span>
-            )}
+            {l.highest_bid > 0 ? `₹${l.highest_bid}` : "No bids yet"}
           </p>
 
-          {/* Actions */}
-          <div
-            style={{
-              marginTop: "12px",
-              display: "flex",
-              gap: "10px",
-              flexWrap: "wrap",
-            }}
-          >
-            <button onClick={() => handleInterest(l.id)}>
-              I’m Interested
-            </button>
+          <button onClick={() => createInterest(l.id)}>
+            I’m Interested
+          </button>
 
+          <div style={{ marginTop: "10px" }}>
             <input
               type="number"
-              placeholder="Your bid"
+              placeholder="Enter your bid"
               value={bidAmounts[l.id] || ""}
               onChange={(e) =>
                 handleBidChange(l.id, e.target.value)
               }
-              style={{ maxWidth: "140px" }}
             />
-
-            <button onClick={() => handlePlaceBid(l.id)}>
+            <button
+              style={{ marginLeft: "8px" }}
+              onClick={() => handlePlaceBid(l.id)}
+            >
               Place Bid
             </button>
           </div>

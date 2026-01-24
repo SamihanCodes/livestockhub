@@ -122,15 +122,33 @@ const updateListing = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// Advanced search controller
+const searchListings = async (req, res) => {
+  try {
+    const { animal_type, minPrice, maxPrice, breed } = req.query;
 
+    const listings = await listingModel.searchListings({
+      animal_type,
+      minPrice,
+      maxPrice,
+      breed,
+    });
 
-
+    res.status(200).json(listings);
+  } catch (error) {
+    console.error("Search listings error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 module.exports = {
   createListing,
   getAllListings,
   getMyListings,
   updateListingStatus,
-  updateListing
+  updateListing,
+  searchListings,
 };
+
+
 
 
