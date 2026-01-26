@@ -55,8 +55,13 @@ const Navbar = () => {
           {" | "}
           <Link to="/profile">Profile</Link>
 
-          {" | "}
-          <Link to="/transactions/my">My Transactions</Link>
+          {/* ✅ Hide My Transactions for Admin only */}
+          {user.role !== "admin" && (
+            <>
+              {" | "}
+              <Link to="/transactions/my">My Transactions</Link>
+            </>
+          )}
 
           {user.role === "admin" && (
             <>

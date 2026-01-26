@@ -1,15 +1,28 @@
-// routes/messageRoutes.js
 const express = require("express");
 const router = express.Router();
+const authenticate = require("../middleware/authMiddleware");
 
 const {
   sendMessage,
   getMessagesByListing,
+  getBuyersForListing,
 } = require("../controllers/messageController");
 
-const authenticate = require("../middleware/authMiddleware");
-
+// Send message
 router.post("/", authenticate, sendMessage);
-router.get("/:listingId", authenticate, getMessagesByListing);
+
+// ✅ Get messages for a listing (optionally filtered by buyerId)
+router.get(
+  "/listing/:listingId",
+  authenticate,
+  getMessagesByListing
+);
+
+// ✅ Seller: get buyers who chatted on a listing
+router.get(
+  "/listing/:listingId/buyers",
+  authenticate,
+  getBuyersForListing
+);
 
 module.exports = router;

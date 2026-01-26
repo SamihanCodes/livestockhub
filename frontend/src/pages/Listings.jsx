@@ -152,7 +152,8 @@ const Listings = () => {
               <div style={{ marginTop: "15px" }}>
                 <Messages
                   listingId={l.id}
-                  receiverId={l.seller_id}
+                  sellerId={l.seller_id}
+                  listingStatus={l.status}
                 />
               </div>
             </>

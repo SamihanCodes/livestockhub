@@ -58,7 +58,12 @@ const MyListings = () => {
 
           {/* 💬 SELLER MESSAGE PANEL */}
           <div style={{ marginTop: "10px" }}>
-            <Messages listingId={l.id} />
+            <Messages
+              listingId={l.id}
+              sellerId={l.seller_id}
+              listingStatus={l.status}
+            />
+
           </div>
         </div>
       ))}
