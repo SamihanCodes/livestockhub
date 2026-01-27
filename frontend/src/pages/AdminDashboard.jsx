@@ -17,110 +17,101 @@ const AdminDashboard = () => {
 
   return (
     <div className="container">
-      <h2 style={{ marginBottom: "20px", color: "#142C52" }}>
+      <h2 style={{ color: "#142C52", marginBottom: "20px" }}>
         Admin Dashboard
       </h2>
 
-      <p style={{ color: "#475569", marginBottom: "25px" }}>
-        Platform overview and system-wide analytics.
-      </p>
-
-      {/* Summary Cards */}
+      {/* 📊 SUMMARY */}
       {summary && (
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             gap: "16px",
-            marginBottom: "40px",
+            marginBottom: "30px",
           }}
         >
-          <div className="card">
-            <h3 style={{ color: "#1B9AAA" }}>Total Users</h3>
-            <p style={{ fontSize: "22px", fontWeight: "bold" }}>
-              {summary.totalUsers}
-            </p>
-          </div>
-
-          <div className="card">
-            <h3 style={{ color: "#1B9AAA" }}>Total Listings</h3>
-            <p style={{ fontSize: "22px", fontWeight: "bold" }}>
-              {summary.totalListings}
-            </p>
-          </div>
-
-          <div className="card">
-            <h3 style={{ color: "#1B9AAA" }}>Transactions</h3>
-            <p style={{ fontSize: "22px", fontWeight: "bold" }}>
-              {summary.totalTransactions}
-            </p>
-          </div>
-
-          <div className="card">
-            <h3 style={{ color: "#22C55E" }}>Total Revenue</h3>
-            <p style={{ fontSize: "22px", fontWeight: "bold" }}>
-              ₹{summary.totalRevenue}
-            </p>
-          </div>
+          {[
+            { label: "Total Users", value: summary.totalUsers },
+            { label: "Total Listings", value: summary.totalListings },
+            { label: "Total Transactions", value: summary.totalTransactions },
+            { label: "Total Revenue", value: `₹${summary.totalRevenue}` },
+          ].map((item, i) => (
+            <div className="card" key={i}>
+              <h3>{item.label}</h3>
+              <p style={{ fontSize: "20px", fontWeight: "bold" }}>
+                {item.value}
+              </p>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Users */}
+      {/* 👤 USERS */}
       <h3 style={{ marginBottom: "10px" }}>Users</h3>
-      {users.length === 0 && (
-        <p style={{ color: "#64748b" }}>No users found</p>
-      )}
       {users.map((u) => (
         <div key={u.id} className="card">
           <p><strong>Name:</strong> {u.name}</p>
           <p><strong>Email:</strong> {u.email}</p>
+          <p><strong>Role:</strong> {u.role}</p>
+        </div>
+      ))}
+
+      {/* 📦 LISTINGS WITH IMAGES */}
+      <h3 style={{ margin: "30px 0 10px" }}>Listings</h3>
+
+      {listings.map((l) => (
+        <div key={l.id} className="card">
+          {/* 🖼️ IMAGES */}
+          {l.images && l.images.length > 0 ? (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                gap: "8px",
+                marginBottom: "12px",
+              }}
+            >
+              {l.images.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt="listing"
+                  style={{
+                    width: "100%",
+                    height: "120px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    border: "1px solid #e5e7eb",
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: "#94a3b8" }}>No images uploaded</p>
+          )}
+
+          <p><strong>Animal:</strong> {l.animal_type}</p>
+          <p><strong>Price:</strong> ₹{l.price}</p>
           <p>
-            <strong>Role:</strong>{" "}
-            <span style={{ textTransform: "capitalize" }}>
-              {u.role}
+            <strong>Status:</strong>{" "}
+            <span
+              style={{
+                color: l.status === "active" ? "#22C55E" : "#EF4444",
+              }}
+            >
+              {l.status}
             </span>
           </p>
         </div>
       ))}
 
-      {/* Listings */}
-      <h3 style={{ margin: "30px 0 10px" }}>Listings</h3>
-      {listings.length === 0 && (
-        <p style={{ color: "#64748b" }}>No listings found</p>
-      )}
-      {listings.map((l) => (
-        <div key={l.id} className="card">
-          <p><strong>Animal:</strong> {l.animal_type}</p>
-          <p><strong>Price:</strong> ₹{l.price}</p>
-          <p>
-            <strong>Status:</strong>{" "}
-            {l.status === "active" ? (
-              <span style={{ color: "#22C55E" }}>Active</span>
-            ) : (
-              <span style={{ color: "#EF4444" }}>Sold</span>
-            )}
-          </p>
-        </div>
-      ))}
-
-      {/* Transactions */}
+      {/* 💳 TRANSACTIONS */}
       <h3 style={{ margin: "30px 0 10px" }}>Transactions</h3>
-      {transactions.length === 0 && (
-        <p style={{ color: "#64748b" }}>
-          No transactions found
-        </p>
-      )}
       {transactions.map((t) => (
         <div key={t.id} className="card">
           <p><strong>Amount:</strong> ₹{t.amount}</p>
-          <p>
-            <strong>Status:</strong>{" "}
-            {t.status === "pending" ? (
-              <span style={{ color: "#F59E0B" }}>Pending</span>
-            ) : (
-              <span style={{ color: "#22C55E" }}>Paid</span>
-            )}
-          </p>
+          <p><strong>Status:</strong> {t.status}</p>
         </div>
       ))}
     </div>

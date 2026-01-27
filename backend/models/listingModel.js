@@ -1,18 +1,19 @@
 const pool = require("../config/db");
 
-// Create new listing
+// ✅ Create new listing (WITH IMAGES)
 const createListing = async (
   seller_id,
   animal_type,
   breed,
   age,
   price,
-  description
+  description,
+  images
 ) => {
   const query = `
     INSERT INTO listings 
-    (seller_id, animal_type, breed, age, price, description)
-    VALUES ($1, $2, $3, $4, $5, $6)
+    (seller_id, animal_type, breed, age, price, description, images)
+    VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb)
     RETURNING *;
   `;
 
@@ -23,13 +24,16 @@ const createListing = async (
     age,
     price,
     description,
+    JSON.stringify(images),
   ];
 
   const result = await pool.query(query, values);
   return result.rows[0];
 };
 
-// Get all active listings with highest bid (FOR BUYERS)
+
+
+// ✅ Get all active listings with highest bid (BUYERS)
 const getAllListingsWithHighestBid = async () => {
   const query = `
     SELECT 
@@ -48,10 +52,11 @@ const getAllListingsWithHighestBid = async () => {
   return result.rows;
 };
 
-// Get listings by seller
+// ✅ Get listings by seller
 const getListingsBySeller = async (seller_id) => {
   const query = `
-    SELECT * FROM listings
+    SELECT *
+    FROM listings
     WHERE seller_id = $1
     ORDER BY created_at DESC;
   `;
@@ -60,7 +65,7 @@ const getListingsBySeller = async (seller_id) => {
   return result.rows;
 };
 
-// Update listing status (seller only)
+// ✅ Update listing status (seller only)
 const updateListingStatus = async (listing_id, seller_id, status) => {
   const query = `
     UPDATE listings
@@ -78,7 +83,7 @@ const updateListingStatus = async (listing_id, seller_id, status) => {
   return result.rows[0];
 };
 
-// Update listing details (EDIT LISTING)
+// ✅ Update listing details (EDIT LISTING)
 const updateListing = async (
   id,
   seller_id,
@@ -113,7 +118,8 @@ const updateListing = async (
   const result = await pool.query(query, values);
   return result.rows[0];
 };
-// Advanced search & filter listings
+
+// ✅ Advanced search & filter listings
 const searchListings = async (filters) => {
   let query = `
     SELECT 
@@ -149,13 +155,12 @@ const searchListings = async (filters) => {
 
   query += `
     GROUP BY listings.id
-    ORDER BY listings.created_at DESC
+    ORDER BY listings.created_at DESC;
   `;
 
   const result = await pool.query(query, values);
   return result.rows;
 };
-
 
 module.exports = {
   createListing,

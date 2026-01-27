@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { searchListings } from "../api/listings";
 import { createInterest } from "../api/interests";
 import { placeBid } from "../api/bids";
-import Messages from "../components/Messages";
 import { useAuth } from "../context/AuthContext";
 
 const Listings = () => {
@@ -16,13 +15,8 @@ const Listings = () => {
   });
   const [bidAmounts, setBidAmounts] = useState({});
 
-  const fetchListings = async () => {
-    try {
-      const res = await searchListings(filters);
-      setListings(res.data);
-    } catch {
-      alert("Failed to load listings");
-    }
+  const fetchListings = () => {
+    searchListings(filters).then((res) => setListings(res.data));
   };
 
   useEffect(() => {
@@ -52,26 +46,13 @@ const Listings = () => {
     }
   };
 
-  const handleInterest = async (listingId) => {
-    try {
-      await createInterest(listingId);
-      alert("Interest registered");
-    } catch (error) {
-      if (error.response?.status === 409) {
-        alert("You have already shown interest in this listing");
-      } else {
-        alert("Failed to register interest");
-      }
-    }
-  };
-
   return (
     <div className="container">
       <h2 style={{ color: "#142C52", marginBottom: "16px" }}>
         Available Listings
       </h2>
 
-      {/* 🔍 SEARCH & FILTER */}
+      {/* 🔍 FILTER BAR */}
       <div className="card" style={{ marginBottom: "20px" }}>
         <h3 style={{ marginBottom: "10px" }}>Search & Filter</h3>
 
@@ -112,12 +93,40 @@ const Listings = () => {
 
       {listings.map((l) => (
         <div className="card" key={l.id}>
+          {/* 🖼️ IMAGES */}
+          {l.images && l.images.length > 0 ? (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                gap: "8px",
+                marginBottom: "12px",
+              }}
+            >
+              {l.images.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt="livestock"
+                  style={{
+                    width: "100%",
+                    height: "120px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    border: "1px solid #e5e7eb",
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: "#94a3b8", marginBottom: "10px" }}>
+              No images uploaded
+            </p>
+          )}
+
+          {/* 📄 DETAILS */}
           <h3 style={{ color: "#1B9AAA" }}>{l.animal_type}</h3>
-
-          <p>
-            <strong>Price:</strong> ₹{l.price}
-          </p>
-
+          <p><strong>Price:</strong> ₹{l.price}</p>
           <p>{l.description}</p>
 
           <p>
@@ -125,38 +134,31 @@ const Listings = () => {
             {l.highest_bid > 0 ? `₹${l.highest_bid}` : "No bids yet"}
           </p>
 
+          {/* ❤️ INTEREST */}
           {user?.role === "buyer" && (
-            <>
-              <button onClick={() => handleInterest(l.id)}>
-                I’m Interested
+            <button onClick={() => createInterest(l.id)}>
+              I’m Interested
+            </button>
+          )}
+
+          {/* 💰 BIDDING */}
+          {user?.role === "buyer" && (
+            <div style={{ marginTop: "10px" }}>
+              <input
+                type="number"
+                placeholder="Enter your bid"
+                value={bidAmounts[l.id] || ""}
+                onChange={(e) =>
+                  handleBidChange(l.id, e.target.value)
+                }
+              />
+              <button
+                style={{ marginLeft: "8px" }}
+                onClick={() => handlePlaceBid(l.id)}
+              >
+                Place Bid
               </button>
-
-              <div style={{ marginTop: "10px" }}>
-                <input
-                  type="number"
-                  placeholder="Enter your bid"
-                  value={bidAmounts[l.id] || ""}
-                  onChange={(e) =>
-                    handleBidChange(l.id, e.target.value)
-                  }
-                />
-                <button
-                  style={{ marginLeft: "8px" }}
-                  onClick={() => handlePlaceBid(l.id)}
-                >
-                  Place Bid
-                </button>
-              </div>
-
-              {/* 💬 CHAT */}
-              <div style={{ marginTop: "15px" }}>
-                <Messages
-                  listingId={l.id}
-                  sellerId={l.seller_id}
-                  listingStatus={l.status}
-                />
-              </div>
-            </>
+            </div>
           )}
         </div>
       ))}

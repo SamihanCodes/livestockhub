@@ -12,22 +12,24 @@ const {
 
 const authenticate = require("../middleware/authMiddleware");
 const authorizeRole = require("../middleware/roleMiddleware");
+const upload = require("../middleware/uploadMiddleware");
 
-
-router.get("/", getAllListings);
-
-
-router.get("/search", searchListings);
-
-
+// ✅ CREATE LISTING (WITH IMAGES)
 router.post(
   "/",
   authenticate,
   authorizeRole("seller"),
+  upload.array("images", 5),
   createListing
 );
 
+// ✅ GET ALL LISTINGS
+router.get("/", getAllListings);
 
+// ✅ SEARCH
+router.get("/search", searchListings);
+
+// ✅ SELLER LISTINGS
 router.get(
   "/my",
   authenticate,
@@ -35,7 +37,7 @@ router.get(
   getMyListings
 );
 
-
+// ✅ EDIT LISTING
 router.put(
   "/:id",
   authenticate,
@@ -43,7 +45,7 @@ router.put(
   updateListing
 );
 
-
+// ✅ UPDATE STATUS
 router.patch(
   "/:id/status",
   authenticate,

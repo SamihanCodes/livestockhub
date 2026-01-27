@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { getMyListings } from "../api/listings";
 import { useNavigate } from "react-router-dom";
-import Messages from "../components/Messages";
 
 const MyListings = () => {
   const [listings, setListings] = useState([]);
@@ -25,6 +24,38 @@ const MyListings = () => {
 
       {listings.map((l) => (
         <div className="card" key={l.id}>
+          {/* 🖼️ IMAGES */}
+          {l.images && l.images.length > 0 ? (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+                gap: "8px",
+                marginBottom: "12px",
+              }}
+            >
+              {l.images.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt="livestock"
+                  style={{
+                    width: "100%",
+                    height: "120px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    border: "1px solid #e5e7eb",
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: "#94a3b8", marginBottom: "10px" }}>
+              No images uploaded
+            </p>
+          )}
+
+          {/* 📄 DETAILS */}
           <h3 style={{ color: "#142C52", marginBottom: "6px" }}>
             {l.animal_type}
           </h3>
@@ -42,29 +73,18 @@ const MyListings = () => {
             )}
           </p>
 
-          {/* ✏️ EDIT LISTING */}
+          {/* ✏️ EDIT */}
           {l.status === "active" && (
             <button
               onClick={() => navigate(`/listings/edit/${l.id}`)}
               style={{
                 backgroundColor: "#16808D",
                 padding: "6px 12px",
-                marginBottom: "10px",
               }}
             >
               Edit Listing
             </button>
           )}
-
-          {/* 💬 SELLER MESSAGE PANEL */}
-          <div style={{ marginTop: "10px" }}>
-            <Messages
-              listingId={l.id}
-              sellerId={l.seller_id}
-              listingStatus={l.status}
-            />
-
-          </div>
         </div>
       ))}
     </div>

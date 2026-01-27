@@ -1,69 +1,92 @@
 const listingModel = require("../models/listingModel");
 
-// Create a new livestock listing (Seller only)
+// ✅ CREATE LISTING (WITH IMAGES)
 const createListing = async (req, res) => {
   try {
+    // 🔍 DEBUG (keep for now, remove later)
+   console.log("FILES STRINGIFIED:", JSON.stringify(req.files, null, 2));
+console.log("FILES RAW:", req.files);
+
+
     const seller_id = req.user.id;
     const { animal_type, breed, age, price, description } = req.body;
 
-    // Basic validation
+    // 🛑 Basic validation
     if (!animal_type || !price) {
       return res.status(400).json({
         message: "Animal type and price are required",
       });
     }
 
+    // 🖼️ Cloudinary image paths
+    const images = Array.isArray(req.files)
+      ? req.files.map((file) => file.path)
+      : [];
+
     const listing = await listingModel.createListing(
       seller_id,
       animal_type,
-      breed,
-      age,
+      breed || null,
+      age || null,
       price,
-      description
+      description || null,
+      images
     );
 
-    res.status(201).json({
-      message: "Listing created successfully",
-      listing,
-    });
+    res.status(201).json(listing);
   } catch (error) {
-    console.error("Create listing error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
+  console.error("Create listing error FULL:", {
+    message: error.message,
+    stack: error.stack,
+    pg: error
+  });
+  return res.status(500).json({ error: error.message });
+}
+
 };
 
-// Get all active listings (Public)
+// ✅ GET ALL ACTIVE LISTINGS (BUYERS)
 const getAllListings = async (req, res) => {
   try {
     const listings =
       await listingModel.getAllListingsWithHighestBid();
     res.status(200).json(listings);
   } catch (error) {
-    console.error("Get listings error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
+  console.error("Create listing error FULL:", {
+    message: error.message,
+    stack: error.stack,
+    pg: error
+  });
+  return res.status(500).json({ error: error.message });
+}
+
 };
 
-
-// Get listings by logged-in seller
+// ✅ GET SELLER'S OWN LISTINGS
 const getMyListings = async (req, res) => {
   try {
     const seller_id = req.user.id;
     const listings = await listingModel.getListingsBySeller(seller_id);
     res.status(200).json(listings);
   } catch (error) {
-    console.error("Get my listings error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
+  console.error("Create listing error FULL:", {
+    message: error.message,
+    stack: error.stack,
+    pg: error
+  });
+  return res.status(500).json({ error: error.message });
+}
+
 };
-// Mark listing as sold (Seller only)
+
+// ✅ UPDATE LISTING STATUS
 const updateListingStatus = async (req, res) => {
   try {
     const seller_id = req.user.id;
     const { id } = req.params;
     const { status } = req.body;
 
-    if (!status || !["active", "sold"].includes(status)) {
+    if (!["active", "sold"].includes(status)) {
       return res.status(400).json({
         message: "Status must be 'active' or 'sold'",
       });
@@ -77,20 +100,24 @@ const updateListingStatus = async (req, res) => {
       );
 
     if (!updatedListing) {
-      return res.status(404).json({
-        message: "Listing not found or unauthorized",
-      });
+      return res
+        .status(404)
+        .json({ message: "Not found or unauthorized" });
     }
 
-    res.status(200).json({
-      message: "Listing status updated",
-      listing: updatedListing,
-    });
+    res.json(updatedListing);
   } catch (error) {
-    console.error("Update listing status error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
+  console.error("Create listing error FULL:", {
+    message: error.message,
+    stack: error.stack,
+    pg: error
+  });
+  return res.status(500).json({ error: error.message });
+}
+
 };
+
+// ✅ EDIT LISTING DETAILS (NO IMAGE CHANGE HERE)
 const updateListing = async (req, res) => {
   try {
     const seller_id = req.user.id;
@@ -108,21 +135,24 @@ const updateListing = async (req, res) => {
     );
 
     if (!updated) {
-      return res.status(404).json({
-        message: "Listing not found or unauthorized",
-      });
+      return res
+        .status(404)
+        .json({ message: "Not found or unauthorized" });
     }
 
-    res.json({
-      message: "Listing updated successfully",
-      listing: updated,
-    });
+    res.json(updated);
   } catch (error) {
-    console.error("Update listing error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
+  console.error("Create listing error FULL:", {
+    message: error.message,
+    stack: error.stack,
+    pg: error
+  });
+  return res.status(500).json({ error: error.message });
+}
+
 };
-// Advanced search controller
+
+// ✅ SEARCH & FILTER LISTINGS
 const searchListings = async (req, res) => {
   try {
     const { animal_type, minPrice, maxPrice, breed } = req.query;
@@ -136,10 +166,16 @@ const searchListings = async (req, res) => {
 
     res.status(200).json(listings);
   } catch (error) {
-    console.error("Search listings error:", error);
-    res.status(500).json({ message: "Server error" });
-  }
+  console.error("Create listing error FULL:", {
+    message: error.message,
+    stack: error.stack,
+    pg: error
+  });
+  return res.status(500).json({ error: error.message });
+}
+
 };
+
 module.exports = {
   createListing,
   getAllListings,
@@ -148,7 +184,3 @@ module.exports = {
   updateListing,
   searchListings,
 };
-
-
-
-

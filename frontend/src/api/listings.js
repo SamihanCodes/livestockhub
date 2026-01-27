@@ -1,13 +1,35 @@
 import api from "./axios";
 
-export const getAllListings = () => api.get("/listings");
+// ✅ Get all listings (buyers)
+export const getAllListings = () => {
+  return api.get("/listings");
+};
 
-export const getMyListings = () => api.get("/listings/my");
+// ✅ Get seller's listings
+export const getMyListings = () => {
+  return api.get("/listings/my");
+};
 
-export const createListing = (data) => api.post("/listings", data);
+// ✅ Create listing (with images)
+export const createListing = (formData) => {
+  return api.post("/listings", formData, {
+     headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
 
-export const updateListing = (id, data) =>
-  api.put(`/listings/${id}`, data);
+// ✅ Update listing
+export const updateListing = (id, data) => {
+  return api.put(`/listings/${id}`, data);
+};
 
-export const searchListings = (params) =>
-  api.get("/listings/search", { params });
+// ✅ Update listing status
+export const updateListingStatus = (id, status) => {
+  return api.patch(`/listings/${id}/status`, { status });
+};
+
+// ✅ Search listings
+export const searchListings = (params) => {
+  return api.get("/listings/search", { params });
+};
