@@ -32,6 +32,7 @@ const Navbar = () => {
           {" | "}
           <Link to="/dashboard">Dashboard</Link>
 
+          {/* SELLER NAV */}
           {user.role === "seller" && (
             <>
               {" | "}
@@ -43,22 +44,24 @@ const Navbar = () => {
               {" | "}
               <Link to="/bids/my">View Bids</Link>
               {" | "}
-              <Link to="/chats">Open Chats</Link>
-
+              <Link to="/seller/chats">Open Chats</Link>
             </>
           )}
 
+          {/* BUYER NAV */}
           {user.role === "buyer" && (
             <>
               {" | "}
               <Link to="/listings">Listings</Link>
+              {" | "}
+              <Link to="/buyer/chats">My Chats</Link>
             </>
           )}
 
           {" | "}
           <Link to="/profile">Profile</Link>
 
-          {/*  Hide My Transactions for Admin only */}
+          {/* Hide My Transactions for Admin only */}
           {user.role !== "admin" && (
             <>
               {" | "}

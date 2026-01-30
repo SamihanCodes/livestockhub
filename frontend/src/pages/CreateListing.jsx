@@ -15,15 +15,16 @@ const CreateListing = () => {
 
   const [images, setImages] = useState([]);
   const [preview, setPreview] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // 🧾 Handle text inputs
+  // Handle text inputs
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // 🖼️ Handle image selection + preview
+  // Handle image selection + preview
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files).slice(0, 5); // max 5
     setImages(files);
 
     const previews = files.map((file) =>
@@ -32,28 +33,48 @@ const CreateListing = () => {
     setPreview(previews);
   };
 
-  // 🚀 Submit listing
+  // Submit listing
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!form.animal_type || !form.price) {
+      alert("Animal type and price are required");
+      return;
+    }
+
     try {
+      setLoading(true);
+
       const formData = new FormData();
 
+      // Append text fields
       Object.entries(form).forEach(([key, value]) => {
         formData.append(key, value);
       });
 
+      // Append images
       images.forEach((img) => {
         formData.append("images", img);
       });
+
+      // DEBUG (you can remove later)
+      for (let pair of formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
 
       await createListing(formData);
 
       alert("Listing created successfully");
       navigate("/dashboard");
     } catch (err) {
-      console.error(err);
-      alert("Failed to create listing");
+      console.error("Create listing error:", err);
+      alert(
+        err.response?.data?.error ||
+          err.response?.data?.message ||
+          "Failed to create listing"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,6 +105,7 @@ const CreateListing = () => {
           <input
             name="age"
             type="number"
+            min="0"
             value={form.age}
             onChange={handleChange}
           />
@@ -92,6 +114,7 @@ const CreateListing = () => {
           <input
             name="price"
             type="number"
+            min="1"
             value={form.price}
             onChange={handleChange}
             required
@@ -105,8 +128,8 @@ const CreateListing = () => {
             onChange={handleChange}
           />
 
-          {/* 🖼️ Image Upload */}
-          <label><strong>Upload Images (max 5)</strong></label>
+          {/* Image Upload */}
+          <label><strong>Upload Images</strong></label>
           <input
             type="file"
             accept="image/*"
@@ -114,7 +137,7 @@ const CreateListing = () => {
             onChange={handleImageChange}
           />
 
-          {/* 🔍 Image Preview */}
+          {/* Preview */}
           {preview.length > 0 && (
             <div
               style={{
@@ -143,12 +166,14 @@ const CreateListing = () => {
 
           <button
             type="submit"
+            disabled={loading}
             style={{
               marginTop: "16px",
               backgroundColor: "#16808D",
+              opacity: loading ? 0.6 : 1,
             }}
           >
-            Create Listing
+            {loading ? "Creating..." : "Create Listing"}
           </button>
         </form>
       </div>

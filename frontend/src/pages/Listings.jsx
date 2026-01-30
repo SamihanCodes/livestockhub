@@ -3,10 +3,11 @@ import { searchListings } from "../api/listings";
 import { createInterest } from "../api/interests";
 import { placeBid } from "../api/bids";
 import { useAuth } from "../context/AuthContext";
-import Messages from "../components/Messages"; // ✅ RESTORED
+import { useNavigate } from "react-router-dom";
 
 const Listings = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [listings, setListings] = useState([]);
   const [filters, setFilters] = useState({
@@ -15,6 +16,7 @@ const Listings = () => {
     maxPrice: "",
   });
   const [bidAmounts, setBidAmounts] = useState({});
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   const fetchListings = () => {
     searchListings(filters).then((res) => setListings(res.data));
@@ -53,7 +55,7 @@ const Listings = () => {
         Available Listings
       </h2>
 
-      {/* 🔍 FILTER BAR */}
+      {/* FILTER BAR */}
       <div className="card" style={{ marginBottom: "20px" }}>
         <h3>Search & Filter</h3>
 
@@ -89,40 +91,53 @@ const Listings = () => {
         </button>
       </div>
 
-      {/* 📦 LISTINGS */}
       {listings.length === 0 && <p>No listings found</p>}
 
       {listings.map((l) => (
         <div className="card" key={l.id}>
-          {/* 🖼️ IMAGES */}
-          {l.images?.length > 0 ? (
+          {/* IMAGES */}
+          {Array.isArray(l.images) && l.images.length > 0 ? (
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-                gap: "8px",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "12px",
                 marginBottom: "12px",
               }}
             >
               {l.images.map((img, i) => (
-                <img
+                <div
                   key={i}
-                  src={img}
-                  alt="livestock"
+                  onClick={() => setLightboxImage(img)}
                   style={{
                     width: "100%",
-                    height: "120px",
-                    objectFit: "cover",
-                    borderRadius: "8px",
+                    height: "220px",
+                    backgroundColor: "#f1f5f9",
+                    borderRadius: "10px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    cursor: "zoom-in",
                   }}
-                />
+                >
+                  <img
+                    src={img}
+                    alt="livestock"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
               ))}
             </div>
           ) : (
             <p style={{ color: "#94a3b8" }}>No images uploaded</p>
           )}
 
-          {/* 📄 DETAILS */}
+          {/* DETAILS */}
           <h3 style={{ color: "#1B9AAA" }}>{l.animal_type}</h3>
           <p><strong>Price:</strong> ₹{l.price}</p>
           <p>{l.description}</p>
@@ -132,14 +147,14 @@ const Listings = () => {
             {l.highest_bid > 0 ? `₹${l.highest_bid}` : "No bids yet"}
           </p>
 
-          {/* ❤️ INTEREST */}
+          {/* INTEREST */}
           {user?.role === "buyer" && (
             <button onClick={() => createInterest(l.id)}>
               I’m Interested
             </button>
           )}
 
-          {/* 💰 BID */}
+          {/* BID */}
           {user?.role === "buyer" && (
             <div style={{ marginTop: "10px" }}>
               <input
@@ -159,17 +174,48 @@ const Listings = () => {
             </div>
           )}
 
-          {/* 💬 CHAT — RESTORED */}
-          {user && (
+          {/* CHAT (FIXED) */}
+          {user?.role === "buyer" && (
             <div style={{ marginTop: "16px" }}>
-              <Messages
-                listingId={l.id}
-                listingStatus={l.status}
-              />
+              <button
+                style={{ backgroundColor: "#2563EB" }}
+                onClick={() =>
+                  navigate(`/buyer/chats/${l.id}`)
+                }
+              >
+                Chat with Seller
+              </button>
             </div>
           )}
         </div>
       ))}
+
+      {/* FULLSCREEN IMAGE */}
+      {lightboxImage && (
+        <div
+          onClick={() => setLightboxImage(null)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(0,0,0,0.85)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            cursor: "zoom-out",
+          }}
+        >
+          <img
+            src={lightboxImage}
+            alt="fullscreen"
+            style={{
+              maxWidth: "95%",
+              maxHeight: "95%",
+              objectFit: "contain",
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

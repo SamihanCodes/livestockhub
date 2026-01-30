@@ -79,9 +79,8 @@ const AdminDashboard = () => {
                   alt="listing"
                   style={{
                     width: "100%",
-                    height: "120px",
-                    objectFit: "cover",
-                    borderRadius: "8px",
+                    height: "300px",
+                    objectFit: "contain",
                     border: "1px solid #e5e7eb",
                   }}
                 />

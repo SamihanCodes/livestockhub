@@ -29,10 +29,13 @@ const createListing = async (req, res) => {
 
     res.status(201).json(listing);
   } catch (error) {
-  console.error("CREATE LISTING FULL ERROR:", error);
-  res.status(500).json({ error: error.message });
-}
-
+    console.log("========== CREATE LISTING ERROR ==========");
+    console.log(error);
+    console.log("ERROR MESSAGE:", error.message);
+    console.log("ERROR STACK:", error.stack);
+    console.log("==========================================");
+    res.status(500).json({ message: error.message });
+  }
 };
 
 //  SEARCH LISTINGS 
@@ -133,7 +136,7 @@ const updateListing = async (req, res) => {
   }
 };
 
-//  DELETE LISTING PERMANEN
+//  DELETE LISTING PERMANENT
 const deleteListing = async (req, res) => {
   try {
     const seller_id = req.user.id;

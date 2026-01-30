@@ -12,23 +12,27 @@ import Profile from "./pages/Profile";
 import MyBids from "./pages/MyBids";
 import MyTransactions from "./pages/MyTransactions";
 import Invoice from "./pages/Invoice";
-import MyInterests from "./pages/MyInterests"
+import MyInterests from "./pages/MyInterests";
 import AdminDashboard from "./pages/AdminDashboard";
 import Notifications from "./pages/Notifications";
 import EditListing from "./pages/EditListing";
+
+// Chat pages
 import SellerChats from "./pages/SellerChats";
-import ChatPage from "./pages/ChatPage";
+import BuyerChatPage from "./pages/BuyerChatPage";
+
 function App() {
   return (
     <Router>
-
       <Navbar />
 
       <Routes>
+        {/* Public */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
+        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -38,6 +42,7 @@ function App() {
           }
         />
 
+        {/* Listings */}
         <Route path="/listings" element={<Listings />} />
 
         <Route
@@ -57,62 +62,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/interests/my"
-          element={
-            <ProtectedRoute>
-              <MyInterests />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/bids/my"
-          element={
-            <ProtectedRoute>
-              <MyBids />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/transactions/my"
-          element={
-            <ProtectedRoute>
-              <MyTransactions />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/invoice/:id"
-          element={
-            <ProtectedRoute>
-              <Invoice />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/notifications"
-          element={
-            <ProtectedRoute>
-              <Notifications />
-            </ProtectedRoute>
-          }
-        />
+
         <Route
           path="/listings/edit/:id"
           element={
@@ -121,15 +71,94 @@ function App() {
             </ProtectedRoute>
           }
         />
-       <Route
-          path="/chats"
+
+        {/* Interests / Bids */}
+        <Route
+          path="/interests/my"
+          element={
+            <ProtectedRoute>
+              <MyInterests />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/bids/my"
+          element={
+            <ProtectedRoute>
+              <MyBids />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Transactions */}
+        <Route
+          path="/transactions/my"
+          element={
+            <ProtectedRoute>
+              <MyTransactions />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/invoice/:id"
+          element={
+            <ProtectedRoute>
+              <Invoice />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Profile */}
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Notifications */}
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <Notifications />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Chats */}
+        <Route
+          path="/buyer/chats/:listingId"
+          element={
+            <ProtectedRoute>
+              <BuyerChatPage />
+            </ProtectedRoute>
+          }
+        />
+
+
+        <Route
+          path="/seller/chats"
           element={
             <ProtectedRoute>
               <SellerChats />
             </ProtectedRoute>
           }
         />
-        <Route path="/chat/:listingId" element={<ChatPage />} />
       </Routes>
     </Router>
   );

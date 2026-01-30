@@ -37,12 +37,14 @@ const MyListings = () => {
                 alt="livestock"
                 style={{
                   width: "100%",
-                  height: "180px",
-                  objectFit: "cover",
+                  maxHeight: "300px",
+                  objectFit: "contain",  
                   borderRadius: "10px",
                   marginBottom: "12px",
+                  backgroundColor: "#f1f5f9"
                 }}
               />
+
             ) : (
               <div
                 style={{
