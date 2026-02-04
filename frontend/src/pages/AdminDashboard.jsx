@@ -1,118 +1,106 @@
 import { useEffect, useState } from "react";
-import { getUsers, getListings, getTransactions } from "../api/admin";
-import { getAdminAnalytics } from "../api/adminAnalytics";
+import {
+  getAdminDashboardStats,
+  getTransactionsChart,
+  getRevenueChart,
+  getLatestListings,
+  getTopListings
+} from "../api/adminAnalytics";
+
+import {
+  LineChart, Line, XAxis, YAxis,
+  CartesianGrid, Tooltip, ResponsiveContainer
+} from "recharts";
 
 const AdminDashboard = () => {
-  const [users, setUsers] = useState([]);
-  const [listings, setListings] = useState([]);
-  const [transactions, setTransactions] = useState([]);
-  const [summary, setSummary] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [transactionsData, setTransactionsData] = useState([]);
+  const [revenueData, setRevenueData] = useState([]);
+  const [latestListings, setLatestListings] = useState([]);
+  const [topListings, setTopListings] = useState([]);
 
   useEffect(() => {
-    getUsers().then((res) => setUsers(res.data));
-    getListings().then((res) => setListings(res.data));
-    getTransactions().then((res) => setTransactions(res.data));
-    getAdminAnalytics().then((res) => setSummary(res.data));
+    getAdminDashboardStats().then(res => setStats(res.data));
+    getTransactionsChart().then(res => setTransactionsData(res.data));
+    getRevenueChart().then(res => setRevenueData(res.data));
+    getLatestListings().then(res => setLatestListings(res.data));
+    getTopListings().then(res => setTopListings(res.data));
   }, []);
+
+  if (!stats) return <div className="container">Loading analytics...</div>;
+
+  const Card = ({ title, value }) => (
+    <div className="card" style={{ textAlign: "center" }}>
+      <h3>{title}</h3>
+      <h2 style={{ color: "#4C97A8", fontSize: "28px" }}>{value}</h2>
+    </div>
+  );
 
   return (
     <div className="container">
-      <h2 style={{ color: "#142C52", marginBottom: "20px" }}>
-        Admin Dashboard
-      </h2>
+      <h2 style={{ marginBottom: 20 }}>Admin Analytics Dashboard</h2>
 
-      {/* 📊 SUMMARY */}
-      {summary && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "16px",
-            marginBottom: "30px",
-          }}
-        >
-          {[
-            { label: "Total Users", value: summary.totalUsers },
-            { label: "Total Listings", value: summary.totalListings },
-            { label: "Total Transactions", value: summary.totalTransactions },
-            { label: "Total Revenue", value: `₹${summary.totalRevenue}` },
-          ].map((item, i) => (
-            <div className="card" key={i}>
-              <h3>{item.label}</h3>
-              <p style={{ fontSize: "20px", fontWeight: "bold" }}>
-                {item.value}
-              </p>
+      {/* KPI CARDS */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16 }}>
+        <Card title="Total Users" value={stats.total_users} />
+        <Card title="Total Listings" value={stats.total_listings} />
+        <Card title="Transactions" value={stats.total_transactions} />
+        <Card title="Revenue" value={`₹ ${stats.total_revenue}`} />
+      </div>
+
+      {/* LINE CHARTS */}
+      <div style={{ marginTop: 50 }}>
+        <h3>Transactions Over Time</h3>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={transactionsData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="count" stroke="#4C97A8" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div style={{ marginTop: 50 }}>
+        <h3>Revenue Over Time</h3>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={revenueData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Line type="monotone" dataKey="revenue" stroke="#22C55E" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* LATEST LISTINGS */}
+      <div className="card" style={{ marginTop: 50 }}>
+        <h3>Latest Listings</h3>
+
+        {latestListings.length === 0 && <p>No listings found.</p>}
+
+        {latestListings.map(l => (
+          <div
+            key={l.id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "8px 0",
+              borderBottom: "1px solid #e5e7eb"
+            }}
+          >
+            <div>
+              <strong>{l.animal_type}</strong>
+              <div style={{ fontSize: 12, color: "#64748b" }}>
+                Seller: {l.seller_email}
+              </div>
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* 👤 USERS */}
-      <h3 style={{ marginBottom: "10px" }}>Users</h3>
-      {users.map((u) => (
-        <div key={u.id} className="card">
-          <p><strong>Name:</strong> {u.name}</p>
-          <p><strong>Email:</strong> {u.email}</p>
-          <p><strong>Role:</strong> {u.role}</p>
-        </div>
-      ))}
-
-      {/* 📦 LISTINGS WITH IMAGES */}
-      <h3 style={{ margin: "30px 0 10px" }}>Listings</h3>
-
-      {listings.map((l) => (
-        <div key={l.id} className="card">
-          {/* 🖼️ IMAGES */}
-          {l.images && l.images.length > 0 ? (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-                gap: "8px",
-                marginBottom: "12px",
-              }}
-            >
-              {l.images.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  alt="listing"
-                  style={{
-                    width: "100%",
-                    height: "300px",
-                    objectFit: "contain",
-                    border: "1px solid #e5e7eb",
-                  }}
-                />
-              ))}
-            </div>
-          ) : (
-            <p style={{ color: "#94a3b8" }}>No images uploaded</p>
-          )}
-
-          <p><strong>Animal:</strong> {l.animal_type}</p>
-          <p><strong>Price:</strong> ₹{l.price}</p>
-          <p>
-            <strong>Status:</strong>{" "}
-            <span
-              style={{
-                color: l.status === "active" ? "#22C55E" : "#EF4444",
-              }}
-            >
-              {l.status}
-            </span>
-          </p>
-        </div>
-      ))}
-
-      {/* 💳 TRANSACTIONS */}
-      <h3 style={{ margin: "30px 0 10px" }}>Transactions</h3>
-      {transactions.map((t) => (
-        <div key={t.id} className="card">
-          <p><strong>Amount:</strong> ₹{t.amount}</p>
-          <p><strong>Status:</strong> {t.status}</p>
-        </div>
-      ))}
+            <span>₹ {l.price}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
