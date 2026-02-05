@@ -2,16 +2,28 @@ const notificationModel = require("../models/notificationModel");
 
 const getMyNotifications = async (req, res) => {
   try {
-    const user_id = req.user.id;
-    const notifications =
-      await notificationModel.getUserNotifications(user_id);
+    const notifications = await notificationModel.getUserNotifications(
+      req.user.id
+    );
     res.json(notifications);
-  } catch (error) {
-    console.error("Get notifications error:", error);
-    res.status(500).json({ message: "Server error" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to load notifications" });
+  }
+};
+
+const markNotificationRead = async (req, res) => {
+  try {
+    await notificationModel.markAsRead(
+      req.params.id,
+      req.user.id
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update notification" });
   }
 };
 
 module.exports = {
   getMyNotifications,
+  markNotificationRead,
 };

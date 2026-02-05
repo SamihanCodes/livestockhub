@@ -16,6 +16,13 @@ const sendMessage = async (req, res) => {
       receiver_id,
       message
     );
+    await notificationModel.createNotification(
+      receiver_id,
+      "New Message",
+      "You received a new chat message",
+      "chat"
+    );
+
 
     res.status(201).json(msg);
   } catch (error) {

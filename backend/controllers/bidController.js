@@ -24,7 +24,7 @@ const placeBid = async (req, res) => {
       return res.status(404).json({ message: "Listing not found" });
     }
 
-    
+
     const listing = listingResult.rows[0];
 
     if (listing.seller_id === buyer_id) {
@@ -59,6 +59,13 @@ const placeBid = async (req, res) => {
       listing.seller_id,
       "A new bid has been placed on your listing."
     );
+    await notificationModel.createNotification(
+      listing.seller_id,
+      "New Bid Received",
+      `A new bid was placed on your listing "${listing.animal_type}"`,
+      "bid"
+    );
+
 
     res.status(201).json({
       message: "Bid placed successfully",

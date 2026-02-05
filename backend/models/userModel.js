@@ -43,10 +43,52 @@ const updateUserPassword = async (userId, hashedPassword) => {
   await pool.query(query, [hashedPassword, userId]);
   return true;
 };
+// ADMIN – get all users
+const getAllUsers = async () => {
+  const result = await pool.query(`
+    SELECT id, name, email, role, is_blocked, created_at
+    FROM users
+    ORDER BY created_at DESC
+  `);
+  return result.rows;
+};
+
+// ADMIN – block user
+const blockUser = async (userId) => {
+  const result = await pool.query(
+    `UPDATE users SET is_blocked = true WHERE id = $1 RETURNING id, email, is_blocked`,
+    [userId]
+  );
+  return result.rows[0];
+};
+
+// ADMIN – unblock user
+const unblockUser = async (userId) => {
+  const result = await pool.query(
+    `UPDATE users SET is_blocked = false WHERE id = $1 RETURNING id, email, is_blocked`,
+    [userId]
+  );
+  return result.rows[0];
+};
+const setUserBlockStatus = async (userId, isBlocked) => {
+  const query = `
+    UPDATE users
+    SET is_blocked = $1
+    WHERE id = $2
+    RETURNING id, name, email, role, is_blocked
+  `;
+  const result = await pool.query(query, [isBlocked, userId]);
+  return result.rows[0];
+};
+
 module.exports = {
   createUser,
   findUserByEmail,
   findUserById,
   updateUserProfile,     
-  updateUserPassword,     
+  updateUserPassword, 
+  getAllUsers,
+  blockUser,
+  unblockUser,    
+  setUserBlockStatus,
 };
