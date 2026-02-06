@@ -1,17 +1,17 @@
 const pool = require("../config/db");
 
-const createNotification = async (user_id, title, message, type) => {
+const createNotification = async (user_id, message) => {
   const result = await pool.query(
     `
-    INSERT INTO notifications (user_id, title, message, type)
-    VALUES ($1, $2, $3, $4)
-    RETURNING *;
+    INSERT INTO notifications (user_id, message)
+    VALUES ($1, $2)
+    RETURNING *
     `,
-    [user_id, title, message, type]
+    [user_id, message]
   );
+
   return result.rows[0];
 };
-
 const getUserNotifications = async (user_id) => {
   const result = await pool.query(
     `

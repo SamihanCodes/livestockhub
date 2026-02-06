@@ -1,3 +1,5 @@
+const notificationModel = require("../models/notificationModel");
+
 const messageModel = require("../models/messageModel");
 
 // SEND MESSAGE (buyer or seller)
@@ -16,13 +18,12 @@ const sendMessage = async (req, res) => {
       receiver_id,
       message
     );
+
+    // 🔔 Create notification (FIXED)
     await notificationModel.createNotification(
       receiver_id,
-      "New Message",
-      "You received a new chat message",
-      "chat"
+      "New message received"
     );
-
 
     res.status(201).json(msg);
   } catch (error) {
@@ -30,6 +31,7 @@ const sendMessage = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // CHAT WINDOW: BETWEEN TWO USERS FOR A LISTING
 const getMessagesBetweenUsers = async (req, res) => {
