@@ -1,0 +1,127 @@
+/* =========================
+   BRAND VARIABLES
+   ========================= */
+:root {
+  --primary-teal: #4C97A8;
+  --navy-core: #02394A;
+  --navy-dark: #012136;
+  --text-dark: #071426;
+  --surface: #ffffff;
+  --error-bg: #FEE2E2;
+  --error-text: #991B1B;
+}
+
+/* =========================
+   PAGE BACKGROUND
+   ========================= */
+.register-page {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* =========================
+   GLASS CARD
+   ========================= */
+.register-card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* HEADINGS */
+.register-card h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--navy-core);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.subtitle {
+  text-align: center;
+  color: #475569;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+/* ERROR */
+.error-box {
+  background: var(--error-bg);
+  color: var(--error-text);
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+/* INPUTS */
+.register-card label {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.register-card input,
+.register-card select {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  background: white;
+}
+
+/* BUTTON */
+.register-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(
+    135deg,
+    var(--primary-teal),
+    var(--navy-core)
+  );
+  transition: all 0.3s ease;
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(2, 57, 74, 0.3);
+}
+
+/* LOGIN LINK */
+.login-text {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 14px;
+  color: #334155;
+}
+
+.login-text a {
+  color: #1B9AAA;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}
