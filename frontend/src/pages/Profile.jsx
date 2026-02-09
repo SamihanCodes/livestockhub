@@ -58,7 +58,7 @@ const Profile = () => {
 
         <div className="glass-container">
           <h1 className="page-heading">
-            My Profile <span>👤</span>
+            Profile
           </h1>
 
           {/* ACCOUNT INFO */}

@@ -20,6 +20,7 @@ const Dashboard = () => {
     <>
       <div className="dashboard-page">
         <div className="dashboard-container glass-box">
+          
           {/* HEADER */}
           <div className="dashboard-header">
             <div>
