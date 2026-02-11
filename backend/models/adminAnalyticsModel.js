@@ -47,4 +47,3 @@ module.exports = {
   getTransactionsOverTime,
   getRevenueOverTime,
 };
-
