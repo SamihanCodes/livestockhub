@@ -6,10 +6,11 @@ const cors = require("cors");
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://your-frontend.vercel.app"
+    "https://fsd-115-samihan-codes.vercel.app/"
   ],
   credentials: true
 }));
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
