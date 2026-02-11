@@ -1,238 +1,162 @@
 
-# 🐄 LiveStockHub – Online Livestock Marketplace
+# 🐄 LiveStockHub
 
-LiveStockHub is a full-stack web application that enables **buyers and sellers to trade livestock online**. Sellers can list animals with images, buyers can browse, filter, bid, show interest, and communicate with sellers. The platform also includes an admin panel for monitoring and analytics.
+### A Full-Stack Livestock Trading Platform
 
-This project is being developed using the **MERN-style architecture** (React + Node.js + Express + PostgreSQL) with cloud-based image storage.
-
----
-
-## 🚀 Features Implemented
-
-### 1. Authentication & Roles
-
-* JWT-based authentication system.
-* Three roles:
-
-  * **Buyer**
-  * **Seller**
-  * **Admin**
-* Secure protected routes.
-* Login & Register system.
+LiveStockHub is a modern full-stack web application that enables secure livestock trading between buyers and sellers.
+It includes bidding, chat, transactions, notifications, and an admin analytics dashboard.
 
 ---
 
-### 2. Seller Features
+## 🚀 Live Demo
 
-* Create livestock listings.
-* Upload up to **5 images per listing** (Cloudinary).
-* Edit listing details.
-* Delete listing.
-* Mark listing as **active/sold**.
-* View all own listings.
-* View buyer interests.
-* View bids received.
-* Seller dashboard.
+> *(Add your deployed link here after deployment)*
+
+```
+https://your-live-url.com
+```
 
 ---
 
-### 3. Buyer Features
+# 📌 Features
 
-* View all active listings.
-* Search & filter listings by:
+## 👤 Authentication & Roles
 
-  * Animal type
-  * Min price
-  * Max price
-* Place bids on listings.
-* Mark interest in listings.
-* View own bids.
-* View own transactions.
-* Buyer dashboard.
+* JWT-based authentication
+* Role-based access control (Buyer / Seller / Admin)
+* Admin demo login autofill option
+* Secure protected routes
 
 ---
 
-### 4. Image Upload System
+## 🐄 Seller Features
 
-* Uses **Cloudinary + Multer**.
-* Supports:
-
-  * JPG / JPEG / PNG
-* Images stored as URLs in database.
-* Image preview before upload.
-* Fullscreen image lightbox on click.
-* Responsive grid image display.
+* Create livestock listings (with image upload via Cloudinary)
+* Edit & delete listings
+* View buyers interested in listings
+* View and accept bids
+* Seller chat with buyers
+* Track transactions
 
 ---
 
-### 5. Bidding System
+## 🛒 Buyer Features
 
-* Buyers can place bids.
-* Highest bid is shown on listing.
-* Sellers can see all bids received.
-* Buyers can see bids they placed.
-
----
-
-### 6. Interest System
-
-* Buyers can mark interest.
-* Sellers can see list of interested buyers.
-* Useful for initiating negotiations.
+* Browse & filter listings
+* Place bids
+* Mark interest
+* Chat with sellers
+* View transactions
+* Simulated payment flow
 
 ---
 
-### 7. Transactions & Invoices
+## 📊 Admin Dashboard
 
-* Completed sales generate transactions.
-* Buyers and sellers can view transaction history.
-* Invoice page for each transaction.
-
----
-
-### 8. Notifications System
-
-* Users receive notifications for:
-
-  * New bids
-  * New interests
-  * Transactions
-* Red dot indicator in navbar.
+* Total users, listings, transactions, revenue stats
+* Revenue & transaction charts (Recharts)
+* User moderation (block/unblock)
+* Listing overview
 
 ---
 
-### 9. Admin Panel
+## 💬 Messaging System
 
-* Admin dashboard.
-* View all users.
-* View all listings.
-* Analytics:
-
-  * Total users
-  * Total listings
-  * Total bids
-  * Platform stats.
+* Real-time style chat (polling based)
+* Seller ↔ Buyer conversations
+* Auto-scroll and styled chat UI
 
 ---
 
-## 🧩 Chat System (In Progress)
+## 🔔 Notifications
 
-We are currently building a **dedicated real-time-style chat system** between buyers and sellers.
-
-### Planned Final Chat Design
-
-#### Buyer Chat Flow
-
-* Buyer sees **“Chat with Seller”** button on each listing.
-* Clicking it opens a **separate Buyer Chat Dashboard**.
-* Buyer can:
-
-  * See all sellers they’ve chatted with.
-  * Select a seller.
-  * Chat inside a dedicated chat window.
-* Chat also accessible from navbar.
-
-#### Seller Chat Flow
-
-* Seller has **no chat inside MyListings**.
-* Seller opens chat from navbar.
-* Seller sees:
-
-  * All listings.
-  * Buyers who messaged per listing.
-* Seller selects buyer → replies in chat window.
-
-#### Chat Features
-
-* One-to-one chat per listing.
-* Message history stored in DB.
-* Buyer ↔ Seller only.
-* Role-based chat routes.
-
-> Chat system is under active development and will be completed next phase.
+* Buyer interest notifications
+* Bid notifications
+* Read/unread state
 
 ---
 
-## 🏗 Tech Stack
+# 🏗 Tech Stack
 
-### Frontend
+## Frontend
 
-* React
+* React (Vite)
 * React Router
 * Axios
-* Context API (Auth)
-* CSS (custom)
+* Recharts
+* CSS (Custom Styling + Glass UI)
 
-### Backend
+## Backend
 
 * Node.js
 * Express.js
-* JWT Authentication
 * PostgreSQL (Neon DB)
+* JWT Authentication
 * Multer
-* Cloudinary
-* pg (node-postgres)
+* Cloudinary (Image Upload)
 
 ---
 
-## 📂 Project Structure
-
-### Backend
+# 🗂 Project Structure
 
 ```
-backend/
+livestockhub/
 │
-├── controllers/
-├── models/
-├── routes/
-├── middleware/
-├── config/
-├── app.js
-└── server.js
-```
-
-### Frontend
-
-```
-frontend/
+├── frontend/                # React Frontend
+│   ├── pages/
+│   ├── components/
+│   ├── api/
+│   └── context/
 │
-├── pages/
-├── components/
-├── api/
-├── context/
-├── routes/
-└── App.jsx
+├── backend/                # Express Backend
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   └── config/
+│
+└── README.md
 ```
 
 ---
 
-## 🛠 Environment Variables
+# ⚙️ Installation Guide
 
-Create `.env` file in backend:
+## 1️⃣ Clone Repository
 
-```env
-DATABASE_URL=postgresql://...
-JWT_SECRET=your_secret_key
-PORT=5000
-
-CLOUDINARY_CLOUD_NAME=xxxx
-CLOUDINARY_API_KEY=xxxx
-CLOUDINARY_API_SECRET=xxxx
+```bash
+git clone https://github.com/SamihanCodes/FSD115-SamihanCodes
+cd livestockhub
 ```
 
 ---
 
-## 🧪 How to Run Locally
-
-### Backend
+## 2️⃣ Backend Setup
 
 ```bash
 cd backend
 npm install
-nodemon server.js
 ```
 
-### Frontend
+Create `.env` file:
+
+```
+DATABASE_URL=your_neon_database_url
+JWT_SECRET=your_secret_key
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+Start server:
+
+```bash
+npm run dev
+```
+
+---
+
+## 3️⃣ Frontend Setup
 
 ```bash
 cd frontend
@@ -242,66 +166,81 @@ npm run dev
 
 ---
 
-## 🗺 Roadmap (Next Phases)
+# 🧪 Demo Credentials
 
-### Phase 1 (Completed)
+## 👑 Admin
 
-* Auth system
-* Listings
-* Image upload
-* Bids
-* Interests
-* Transactions
-* Admin panel
+(Autofill button available on login page)
 
-### Phase 2 (Ongoing)
-
-* Proper buyer/seller chat system
-* Separate chat dashboards
-* Chat routing fixes
-* Better UI for chat
-
-### Phase 3 (Future)
-
-* WebSocket real-time chat
-* Payment gateway integration
-* Ratings & reviews
-* Seller verification
-* Mobile responsiveness
-* Search by location
-* AI-based price suggestions
+```
+Email: samihan@gmail.com
+Password: 123
+```
 
 ---
 
-## 🎯 Project Goal
+# 🛡 Security Features
 
-To build a **complete digital livestock trading platform** where:
-
-* Farmers can sell animals easily.
-* Buyers can discover and negotiate transparently.
-* Admins can monitor platform health.
-* All communication and transactions stay inside the system.
+* Password hashing (bcrypt)
+* JWT authentication
+* Role-based authorization
+* Cloudinary secure image storage
+* Protected admin routes
 
 ---
 
-## 🧠 Learning Outcomes
+# 🗄 Database Overview
 
-This project covers:
+Main tables:
+
+* users
+* listings
+* bids
+* interests
+* messages
+* transactions
+* notifications
+
+Listings images are stored as `JSONB` array in PostgreSQL.
+
+---
+
+
+# 📈 Future Improvements
+
+* Real-time chat with WebSockets
+* Razorpay/Stripe payment integration
+* Email notifications
+* Advanced analytics
+* Image optimization
+* Pagination for listings
+* Search indexing
+
+---
+
+# 👨‍💻 Developer
+
+**Samihan Ajit Jadhav**
+Computer Engineering Student
+Full Stack Developer
+
+---
+
+# 📄 License
+
+This project is for educational and demonstration purposes.
+
+---
+
+# 🌟 Final Notes
+
+LiveStockHub demonstrates:
 
 * Full-stack architecture
-* REST APIs
-* JWT auth
+* Clean UI/UX
 * Role-based access control
-* File uploads
-* SQL joins & relations
-* Real-world marketplace logic
-* Debugging production-level issues
+* Production-ready backend
+* Real-world marketplace features
 
----
-
-## 📌 Current Status
-
-> Listing, bidding, interests, and image systems are **fully stable**.
-> Chat system is **under active reconstruction and will be completed next**.
 
 

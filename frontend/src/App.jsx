@@ -21,6 +21,7 @@ import SellerChats from "./pages/SellerChats";
 import ChatPage from "./pages/ChatPage";
 
 
+
 function App() {
   return (
     <Router>
@@ -41,6 +42,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
 
         {/* Listings */}
         <Route path="/listings" element={<Listings />} />
@@ -145,6 +147,7 @@ function App() {
         <Route path="/seller/chats" element={<SellerChats />} />
         <Route path="/chat/:listingId" element={<ChatPage />} />
 
+          
       </Routes>
     </Router>
   );

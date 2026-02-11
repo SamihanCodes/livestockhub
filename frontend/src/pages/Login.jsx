@@ -34,6 +34,12 @@ const Login = () => {
       }
     }
   };
+  //  DEMO ADMIN AUTO-FILL
+  const fillAdminCredentials = () => {
+    setEmail("samihan@gmail.com");
+    setPassword("123");
+  };
+
 
   return (
     <>
@@ -70,6 +76,16 @@ const Login = () => {
           <button type="submit" className="login-btn">
             Login
           </button>
+
+          {/*ADMIN ACCESS BUTTON */}
+          <button
+          className="admin-access-btn"
+            type="button"
+            onClick={fillAdminCredentials}
+          >
+             Admin Access (Demo)
+          </button>
+
 
           <p className="register-text">
             Don’t have an account?{" "}

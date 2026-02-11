@@ -30,7 +30,7 @@ const Profile = () => {
     try {
       const res = await updateProfile(profileForm);
       updateUser(res.data);
-      setMessage("Profile updated successfully");
+      setMessage("Profile updated successfully. Login again");
     } catch {
       setError("Profile update failed");
     }

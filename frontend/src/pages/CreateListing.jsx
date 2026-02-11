@@ -111,7 +111,7 @@ const CreateListing = () => {
               onChange={handleChange}
             />
 
-            <label>Upload Images</label>
+            <label>Upload Images (.png File Only)</label>
             <input
               type="file"
               accept="image/*"
