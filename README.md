@@ -13,7 +13,7 @@ It includes bidding, chat, transactions, notifications, and an admin analytics d
 > *(Add your deployed link here after deployment)*
 
 ```
-https://your-live-url.com
+https://livestockhub.onrender.com
 ```
 
 ---
@@ -125,7 +125,7 @@ livestockhub/
 ## 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/SamihanCodes/FSD115-SamihanCodes
+git clone https://github.com/SamihanCodes/livestockhub
 cd livestockhub
 ```
 
